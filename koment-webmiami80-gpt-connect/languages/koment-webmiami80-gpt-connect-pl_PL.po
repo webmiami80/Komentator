@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Settings"
+msgstr "Ustawienia"
+
+msgid "AIengine"
+msgstr "Silnik AI"
+
+msgid "Provider"
+msgstr "Dostawca"
+
+msgid "Model"
+msgstr "Model"
+
+msgid "gpt-3.5-turbo-16k"
+msgstr "gpt-3.5-turbo-16k"
+
+msgid "gpt-3.5-turbo"
+msgstr "gpt-3.5-turbo"
+
+msgid "Rate Limit Buffer (in Seconds)"
+msgstr "Bufor limitu szybkości (w sekundach)"
+
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgid "Max Tokens"
+msgstr "Maksymalna liczba tokenów"
+
+msgid "API Key"
+msgstr "Klucz API"
+
+msgid "AutoGPT"
+msgstr "AutoGPT"
+
+msgid "Queue"
+msgstr "Kolejka"
+
+msgid "CRON"
+msgstr "CRON"
+
+msgid "Generate Comments"
+msgstr "Generuj komentarze"
+
+msgid "AIengine Provider"
+msgstr "Dostawca silnika AI"
+
+msgid "AIengine Model"
+msgstr "Model silnika AI"
+
+msgid "Rate Limit Buffer"
+msgstr "Bufor limitu szybkości"
+
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgid "Max Tokens"
+msgstr "Maksymalna liczba tokenów"
+
+msgid "API Key"
+msgstr "Klucz API"
+
+msgid "Generate Comments"
+msgstr "Generuj komentarze"
+
+msgid "Check If Comment Exists"
+msgstr "Sprawdź, czy komentarz istnieje"
+
+msgid "Save Comment History"
+msgstr "Zapisz historię komentarzy"
