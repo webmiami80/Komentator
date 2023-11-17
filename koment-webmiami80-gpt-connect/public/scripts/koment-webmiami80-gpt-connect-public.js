@@ -1,4 +1,4 @@
-// public/koment-webmiami80-gpt-connect-public.js
+// public/scripts/koment-webmiami80-gpt-connect-public.js
 
 (function ($) {
     $(document).ready(function () {
@@ -6,10 +6,10 @@
 
         // Przykładowy kod: pobierz dane z serwera przy użyciu AJAX
         $.ajax({
-            url: ajax_object.ajax_url,
+            url: koment_webmiami80_gpt_connect_public_ajax_object.ajax_url,
             type: 'post',
             data: {
-                action: 'koment_webmiami80_gpt_connect_ajax_request',
+                action: 'koment_webmiami80_gpt_connect_public_ajax_request',
                 parameter: 'example_parameter',
             },
             success: function (response) {
