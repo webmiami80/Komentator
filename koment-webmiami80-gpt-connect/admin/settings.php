@@ -1,215 +1,154 @@
 <?php
-// settings.php
+// admin/settings.php
 
-// Dodaj nagłówek strony
+// Funkcja generująca zawartość strony ustawień w panelu administracyjnym
 function koment_webmiami80_gpt_connect_settings_page() {
     ?>
     <div class="wrap">
-        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        <h2>Koment WebMiami80 GPT Connect Settings</h2>
         <form method="post" action="options.php">
             <?php
-                settings_fields('koment_webmiami80_gpt_connect_settings');
-                do_settings_sections('koment_webmiami80_gpt_connect');
-                submit_button();
+            // Ustawienia WordPress
+            settings_fields('koment_webmiami80_gpt_connect_settings');
+            do_settings_sections('koment_webmiami80_gpt_connect_settings');
+            submit_button();
+            ?>
+        </form>
+
+        <h2>AutoGPT Settings</h2>
+        <form method="post" action="options.php">
+            <?php
+            // Ustawienia WordPress
+            settings_fields('autogpt_settings');
+            do_settings_sections('autogpt_settings');
+            submit_button();
+            ?>
+        </form>
+
+        <h2>Kolejka Settings</h2>
+        <form method="post" action="options.php">
+            <?php
+            // Ustawienia WordPress
+            settings_fields('kolejka_settings');
+            do_settings_sections('kolejka_settings');
+            submit_button();
+            ?>
+        </form>
+
+        <h2>CRON Settings</h2>
+        <form method="post" action="options.php">
+            <?php
+            // Ustawienia WordPress
+            settings_fields('cron_settings');
+            do_settings_sections('cron_settings');
+            submit_button();
             ?>
         </form>
     </div>
     <?php
 }
 
-// Dodaj sekcje i pola ustawień
+// Funkcja inicjująca ustawienia
 function koment_webmiami80_gpt_connect_settings_init() {
-    register_setting('koment_webmiami80_gpt_connect_settings', 'koment_webmiami80_gpt_connect_settings');
-
-    // Sekcja AIengine
+    // Sekcja ustawień AIengine
     add_settings_section(
         'aiengine_section',
-        'Ustawienia AIengine',
+        'AIengine Settings',
         'aiengine_section_callback',
-        'koment_webmiami80_gpt_connect'
+        'koment_webmiami80_gpt_connect_settings'
     );
 
+    // Pole Provider w sekcji AIengine
     add_settings_field(
-        'aiengine_provider',
+        'provider',
         'Provider',
-        'aiengine_provider_callback',
-        'koment_webmiami80_gpt_connect',
+        'provider_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
+    // Pole Model w sekcji AIengine
     add_settings_field(
-        'aiengine_model',
+        'model',
         'Model',
-        'aiengine_model_callback',
-        'koment_webmiami80_gpt_connect',
+        'model_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
+    // Pole Rate Limit Buffer w sekcji AIengine
     add_settings_field(
-        'aiengine_rate_limit',
+        'rate_limit_buffer',
         'Rate Limit Buffer (in Seconds)',
-        'aiengine_rate_limit_callback',
-        'koment_webmiami80_gpt_connect',
+        'rate_limit_buffer_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
+    // Pole Temperature w sekcji AIengine
     add_settings_field(
-        'aiengine_temperature',
+        'temperature',
         'Temperature',
-        'aiengine_temperature_callback',
-        'koment_webmiami80_gpt_connect',
+        'temperature_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
+    // Pole Max Tokens w sekcji AIengine
     add_settings_field(
-        'aiengine_max_tokens',
+        'max_tokens',
         'Max Tokens',
-        'aiengine_max_tokens_callback',
-        'koment_webmiami80_gpt_connect',
+        'max_tokens_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
+    // Pole API Key w sekcji AIengine
     add_settings_field(
-        'aiengine_api_key',
+        'api_key',
         'API Key',
-        'aiengine_api_key_callback',
-        'koment_webmiami80_gpt_connect',
+        'api_key_callback',
+        'koment_webmiami80_gpt_connect_settings',
         'aiengine_section'
     );
 
-    // Sekcja AutoGPT
-    add_settings_section(
-        'autogpt_section',
-        'Ustawienia AutoGPT',
-        'autogpt_section_callback',
-        'koment_webmiami80_gpt_connect'
-    );
-
-    add_settings_field(
-        'autogpt_cron_agents',
-        'Konfiguracja Agentów Cron',
-        'autogpt_cron_agents_callback',
-        'koment_webmiami80_gpt_connect',
-        'autogpt_section'
-    );
-
-    // Sekcja Kolejki
-    add_settings_section(
-        'queue_section',
-        'Ustawienia Kolejki',
-        'queue_section_callback',
-        'koment_webmiami80_gpt_connect'
-    );
-
-    add_settings_field(
-        'queue_progress_monitoring',
-        'Monitorowanie Postępów Kolejki',
-        'queue_progress_monitoring_callback',
-        'koment_webmiami80_gpt_connect',
-        'queue_section'
-    );
-
-    // Sekcja CRON
-    add_settings_section(
-        'cron_section',
-        'Ustawienia CRON',
-        'cron_section_callback',
-        'koment_webmiami80_gpt_connect'
-    );
-
-    add_settings_field(
-        'cron_tasks',
-        'Kolejkowane Zadania CRON',
-        'cron_tasks_callback',
-        'koment_webmiami80_gpt_connect',
-        'cron_section'
-    );
+    // Rejestracja ustawień
+    register_setting('koment_webmiami80_gpt_connect_settings', 'koment_webmiami80_gpt_connect_settings');
 }
-
-// Callbacki dla pól AIengine
-function aiengine_section_callback() {
-    echo '<p>Skonfiguruj ustawienia AIengine.</p>';
-}
-
-function aiengine_provider_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $provider = isset($options['aiengine_provider']) ? esc_attr($options['aiengine_provider']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[aiengine_provider]" value="' . $provider . '" />';
-}
-
-function aiengine_model_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $model = isset($options['aiengine_model']) ? esc_attr($options['aiengine_model']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[aiengine_model]" value="' . $model . '" />';
-}
-
-function aiengine_rate_limit_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $rate_limit = isset($options['aiengine_rate_limit']) ? esc_attr($options['aiengine_rate_limit']) : '';
-    echo '<input type="number" name="koment_webmiami80_gpt_connect_settings[aiengine_rate_limit]" value="' . $rate_limit . '" min="1" max="30" />';
-}
-
-function aiengine_temperature_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $temperature = isset($options['aiengine_temperature']) ? esc_attr($options['aiengine_temperature']) : '0.7';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[aiengine_temperature]" value="' . $temperature . '" />';
-}
-
-function aiengine_max_tokens_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $max_tokens = isset($options['aiengine_max_tokens']) ? esc_attr($options['aiengine_max_tokens']) : '1500';
-    echo '<input type="number" name="koment_webmiami80_gpt_connect_settings[aiengine_max_tokens]" value="' . $max_tokens . '" />';
-}
-
-function aiengine_api_key_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $api_key = isset($options['aiengine_api_key']) ? esc_attr($options['aiengine_api_key']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[aiengine_api_key]" value="' . $api_key . '" />';
-}
-
-// Callbacki dla pól AutoGPT
-function autogpt_section_callback() {
-    echo '<p>Konfiguracja AutoGPT.</p>';
-}
-
-function autogpt_cron_agents_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $autogpt_cron_agents = isset($options['autogpt_cron_agents']) ? esc_attr($options['autogpt_cron_agents']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[autogpt_cron_agents]" value="' . $autogpt_cron_agents . '" />';
-}
-
-// Callbacki dla pól Kolejki
-function queue_section_callback() {
-    echo '<p>Ustawienia monitorowania kolejki.</p>';
-}
-
-function queue_progress_monitoring_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $queue_progress_monitoring = isset($options['queue_progress_monitoring']) ? esc_attr($options['queue_progress_monitoring']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[queue_progress_monitoring]" value="' . $queue_progress_monitoring . '" />';
-}
-
-// Callbacki dla pól CRON
-function cron_section_callback() {
-    echo '<p>Ustawienia CRON.</p>';
-}
-
-function cron_tasks_callback() {
-    $options = get_option('koment_webmiami80_gpt_connect_settings');
-    $cron_tasks = isset($options['cron_tasks']) ? esc_attr($options['cron_tasks']) : '';
-    echo '<input type="text" name="koment_webmiami80_gpt_connect_settings[cron_tasks]" value="' . $cron_tasks . '" />';
-}
-
-// Zarejestruj strony ustawień
-add_action('admin_menu', 'koment_webmiami80_gpt_connect_add_admin_menu');
 add_action('admin_init', 'koment_webmiami80_gpt_connect_settings_init');
 
-function koment_webmiami80_gpt_connect_add_admin_menu() {
-    add_menu_page(
-        'Koment WebMiami80 GPT Connect Settings',
-        'Koment WebMiami80 GPT Connect',
-        'manage_options',
-        'koment_webmiami80_gpt_connect',
-        'koment_webmiami80_gpt_connect_settings_page'
-    );
+// Sekcja ustawień AutoGPT
+function autogpt_settings_section_callback() {
+    echo '<p>Tutaj możesz skonfigurować ustawienia AutoGPT.</p>';
 }
+
+// Funkcja inicjująca ustawienia AutoGPT
+function autogpt_settings_init() {
+    // Rejestracja ustawień
+    register_setting('autogpt_settings', 'autogpt_settings');
+}
+add_action('admin_init', 'autogpt_settings_init');
+
+// Sekcja ustawień Kolejki
+function kolejka_settings_section_callback() {
+    echo '<p>Tutaj możesz skonfigurować ustawienia Kolejki.</p>';
+}
+
+// Funkcja inicjująca ustawienia Kolejki
+function kolejka_settings_init() {
+    // Rejestracja ustawień
+    register_setting('kolejka_settings', 'kolejka_settings');
+}
+add_action('admin_init', 'kolejka_settings_init');
+
+// Sekcja ustawień CRON
+function cron_settings_section_callback() {
+    echo '<p>Tutaj możesz skonfigurować ustawienia CRON.</p>';
+}
+
+// Funkcja inicjująca ustawienia CRON
+function cron_settings_init() {
+    // Rejestracja ustawień
+    register_setting('cron_settings', 'cron_settings');
+}
+add_action('admin_init', 'cron_settings_init');
