@@ -1,0 +1,18 @@
+/* public/styles/koment-webmiami80-gpt-connect-public.css */
+
+/* Dodaj tutaj niestandardowe style CSS dla strony publicznej */
+
+.koment-webmiami80-gpt-comment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.koment-webmiami80-gpt-comment-author {
+    font-weight: bold;
+}
+
+.koment-webmiami80-gpt-comment-metadata {
+    font-size: 12px;
+    color: #888;
+}
