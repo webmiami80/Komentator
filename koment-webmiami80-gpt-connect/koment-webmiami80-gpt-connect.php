@@ -1,32 +1,40 @@
 <?php
 /*
-Plugin Name: Koment WebMiami80 GPT Connect
-Description: Wtyczka umożliwiająca generowanie unikalnych komentarzy przy użyciu cheatGPT, połączonego z OpenAI API.
-Version: 1.0
-Author: Paweł Zajączkowski
-Author Email: webmiami80@gmail.com
+* Plugin Name: Koment WebMiami80 GPT Connect
+ * Description: Wtyczka Koment WebMiami80 GPT Connect umożliwia generowanie unikalnych komentarzy przy użyciu cheatGPT, połączonego z OpenAI API. Użytkownik może skonfigurować różne opcje w panelu administracyjnym, takie jak ustawienia AIengine, AutoGPT i inne.
+ * Author: Paweł Zajączkowski
+ * Author URI: https://www.webmiami80.pl
+ * Version: 1.0.0
+ * License: GPL-3.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Text Domain: koment-webmiami80-gpt-connect
 */
 
 // Aktywacja wtyczki
 function koment_webmiami80_gpt_connect_activate() {
     // Działania do wykonania podczas aktywacji
 }
+register_activation_hook(__FILE__, 'koment_webmiami80_gpt_connect_activate');
 
 // Dezaktywacja wtyczki
 function koment_webmiami80_gpt_connect_deactivate() {
     // Działania do wykonania podczas dezaktywacji
 }
+register_deactivation_hook(__FILE__, 'koment_webmiami80_gpt_connect_deactivate');
 
-// Funkcja wywoływana podczas deaktywacji wtyczki
+// Dezinstalacja wtyczki
 function koment_webmiami80_gpt_connect_uninstall() {
-    // Działania do wykonania podczas odinstalowywania wtyczki
+    // Działania do wykonania podczas dezinstalacji
 }
+register_uninstall_hook(__FILE__, 'koment_webmiami80_gpt_connect_uninstall');
 
 // Rejestracja funkcji aktywacyjnej
 register_activation_hook(__FILE__, 'koment_webmiami80_gpt_connect_activate');
 
 // Rejestracja funkcji deaktywacyjnej
-register_deactivation_hook(__FILE__, 'koment_webmiami80_gpt_connect_deactivate');
+if (function_exists('register_deactivation_hook')) {
+    register_deactivation_hook(__FILE__, 'koment_webmiami80_gpt_connect_deactivate');
+}
 
 // Rejestracja funkcji odinstalowującej
 register_uninstall_hook(__FILE__, 'koment_webmiami80_gpt_connect_uninstall');
@@ -47,11 +55,6 @@ function koment_webmiami80_gpt_connect_admin_menu() {
 }
 add_action('admin_menu', 'koment_webmiami80_gpt_connect_admin_menu');
 
-// Inne funkcje, hooki, itp.
-
-// Załącz plik z ustawieniami i panelu administracyjnego
-require_once(plugin_dir_path(__FILE__) . 'admin/settings.php');
-
 // Funkcja generująca zawartość strony ustawień w panelu administracyjnym
 function koment_webmiami80_gpt_connect_settings_page() {
     ?>
@@ -60,8 +63,8 @@ function koment_webmiami80_gpt_connect_settings_page() {
         <form method="post" action="options.php">
             <?php
             // Ustawienia WordPress
-            settings_fields('koment_webmiami80_gpt_connect_settings');
-            do_settings_sections('koment_webmiami80_gpt_connect_settings');
+            settings_fields('koment_webmiami80_gpt_connect_settings_group');
+            do_settings_sections('koment-webmiami80-gpt-connect');
             submit_button();
             ?>
         </form>
@@ -71,12 +74,17 @@ function koment_webmiami80_gpt_connect_settings_page() {
 
 // Funkcja inicjująca ustawienia
 function koment_webmiami80_gpt_connect_settings_init() {
+    // Utwórz grupę ustawień, jeśli nie istnieje
+    if (!get_option('koment_webmiami80_gpt_connect_settings_group')) {
+        add_option('koment_webmiami80_gpt_connect_settings_group', array());
+    }
+
     // Sekcja ustawień AIengine
     add_settings_section(
         'aiengine_section',
         'AIengine Settings',
         'aiengine_section_callback',
-        'koment_webmiami80_gpt_connect_settings'
+        'koment-webmiami80-gpt-connect'
     );
 
     // Pole Provider w sekcji AIengine
@@ -84,78 +92,145 @@ function koment_webmiami80_gpt_connect_settings_init() {
         'provider',
         'Provider',
         'provider_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
     // Pole Model w sekcji AIengine
     add_settings_field(
-        'model',
+        'aiengine_model',
         'Model',
-        'model_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'aiengine_model_callback',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
     // Pole Rate Limit Buffer w sekcji AIengine
     add_settings_field(
-        'rate_limit_buffer',
+        'aiengine_rate_limit_buffer',
         'Rate Limit Buffer (in Seconds)',
-        'rate_limit_buffer_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'aiengine_rate_limit_buffer_callback',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
     // Pole Temperature w sekcji AIengine
     add_settings_field(
-        'temperature',
+        'aiengine_temperature',
         'Temperature',
-        'temperature_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'aiengine_temperature_callback',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
     // Pole Max Tokens w sekcji AIengine
     add_settings_field(
-        'max_tokens',
+        'aiengine_max_tokens',
         'Max Tokens',
-        'max_tokens_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'aiengine_max_tokens_callback',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
     // Pole API Key w sekcji AIengine
     add_settings_field(
-        'api_key',
+        'aiengine_api_key',
         'API Key',
-        'api_key_callback',
-        'koment_webmiami80_gpt_connect_settings',
+        'aiengine_api_key_callback',
+        'koment-webmiami80-gpt-connect',
         'aiengine_section'
     );
 
-    // Rejestracja ustawień
-    register_setting('koment_webmiami80_gpt_connect_settings', 'koment_webmiami80_gpt_connect_settings');
+    // Dodaj pozostałe pola ustawień i ich funkcje callback
+    // ...
 }
 add_action('admin_init', 'koment_webmiami80_gpt_connect_settings_init');
 
-// Funkcja generująca zawartość strony ustawień w panelu administracyjnym
+// Funkcje callback dla pól ustawień
+function aiengine_model_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['aiengine_model']) ? esc_attr($options['aiengine_model']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[aiengine_model]' value='$value' />";
+}
+
+function aiengine_rate_limit_buffer_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['aiengine_rate_limit_buffer']) ? esc_attr($options['aiengine_rate_limit_buffer']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[aiengine_rate_limit_buffer]' value='$value' />";
+}
+
+function aiengine_temperature_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['aiengine_temperature']) ? esc_attr($options['aiengine_temperature']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[aiengine_temperature]' value='$value' />";
+}
+
+function aiengine_max_tokens_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['aiengine_max_tokens']) ? esc_attr($options['aiengine_max_tokens']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[aiengine_max_tokens]' value='$value' />";
+}
+
+function aiengine_api_key_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['aiengine_api_key']) ? esc_attr($options['aiengine_api_key']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[aiengine_api_key]' value='$value' />";
+}
+
+// Funkcja callback dla sekcji AIengine
 function aiengine_section_callback() {
-    echo '<p>Tutaj możesz skonfigurować ustawienia AIengine.</p>';
+    echo 'Opis sekcji AIengine.';
 }
 
-// Dodaj obsługę AJAX
-function koment_webmiami80_gpt_connect_ajax_request() {
-    // Tutaj umieść kod obsługi AJAX
-    $example_parameter = $_POST['parameter'];
-
-    // Przykładowa odpowiedź
-    $response = 'Odpowiedź na parametr: ' . $example_parameter;
-
-    // Zwróć odpowiedź
-    echo $response;
-
-    // Wymagane, aby przerwać działanie WordPress
-    wp_die();
+// Funkcja callback dla pola Provider
+function provider_callback() {
+    $options = get_option('koment_webmiami80_gpt_connect_settings_group');
+    $value = isset($options['provider']) ? esc_attr($options['provider']) : '';
+    echo "<input type='text' name='koment_webmiami80_gpt_connect_settings_group[provider]' value='$value' />";
 }
-add_action('wp_ajax_koment_webmiami80_gpt_connect_ajax_request', 'koment_webmiami80_gpt_connect_ajax_request');
-add_action('wp_ajax_nopriv_koment_webmiami80_gpt_connect_ajax_request', 'koment_webmiami80_gpt_connect_ajax_request');
+
+// Dodaj wszystkie funkcje, hooki i inne elementy wtyczki poniżej
+
+// Funkcje, hooki, itp.
+
+// Funkcja wywoływana przy aktywacji wtyczki
+function koment_webmiami80_gpt_connect_on_activation() {
+    // Działania do wykonania przy aktywacji wtyczki
+    // Na przykład: Inicjalizacja ustawień domyślnych, utworzenie tabel w bazie danych itp.
+}
+register_activation_hook(__FILE__, 'koment_webmiami80_gpt_connect_on_activation');
+
+// Funkcja wywoływana przy deaktywacji wtyczki
+function koment_webmiami80_gpt_connect_on_deactivation() {
+    // Działania do wykonania przy deaktywacji wtyczki
+    // Na przykład: Czyszczenie danych, zatrzymywanie planowanych zadań itp.
+}
+register_deactivation_hook(__FILE__, 'koment_webmiami80_gpt_connect_on_deactivation');
+
+// Funkcja wywoływana przy odinstalowywaniu wtyczki
+function koment_webmiami80_gpt_connect_on_uninstall() {
+    // Działania do wykonania przy odinstalowywaniu wtyczki
+    // Na przykład: Usuwanie tabel w bazie danych, czyszczenie wszystkich danych itp.
+}
+register_uninstall_hook(__FILE__, 'koment_webmiami80_gpt_connect_on_uninstall');
+
+// Funkcja wywoływana podczas inicjalizacji wtyczki
+function koment_webmiami80_gpt_connect_init() {
+    // Działania do wykonania podczas inicjalizacji wtyczki
+    // Na przykład: Rejestracja skryptów, stylów, dodawanie nowych endpointów itp.
+}
+add_action('init', 'koment_webmiami80_gpt_connect_init');
+
+// Funkcja wywoływana podczas ładowania strony admina
+function koment_webmiami80_gpt_connect_admin_init() {
+    // Działania do wykonania podczas ładowania strony admina
+    // Na przykład: Rejestracja skryptów i stylów dla panelu administracyjnego, dodawanie menu itp.
+}
+add_action('admin_init', 'koment_webmiami80_gpt_connect_admin_init');
+
+// Funkcja wywoływana podczas ładowania strony publicznej
+function koment_webmiami80_gpt_connect_frontend_init() {
+    // Działania do wykonania podczas ładowania strony publicznej
+    // Na przykład: Rejestracja skryptów i stylów dla strony publicznej, dodawanie nowych shortcode'ów itp.
+}
+add_action('wp_enqueue_scripts', 'koment_webmiami80_gpt_connect_frontend_init');
